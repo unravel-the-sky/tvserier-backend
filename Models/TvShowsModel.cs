@@ -21,8 +21,7 @@ namespace backend.Models
         {
             Console.WriteLine($"Name: {show.name}\t");
         }
-        static string getTvShowUrlTest = "http://api.tvmaze.com/search/shows?q=maniac";
-        static async Task RunAsync()
+        static async Task RunAsync(string[] showNames)
         {
             client.BaseAddress = new Uri("http://localhost:5000/");
             client.DefaultRequestHeaders.Accept.Clear();
@@ -30,9 +29,12 @@ namespace backend.Models
 
             try
             {
-                var url = getTvShowUrlTest;
-                var show = await GetTvShowAsync(url);
-                ShowProduct(show);
+                foreach (string showName in showNames)
+                {
+                    var url = ApiLinks.getTvShowUrlQueryUrl + showName + ApiLinks.embedEpisodes;
+                    var show = await GetTvShowAsync(url);
+                    ShowProduct(show);
+                }
             }
             catch (Exception err)
             {
@@ -45,37 +47,44 @@ namespace backend.Models
             HttpResponseMessage response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
-                var showTemp = await response.Content.ReadAsAsync<JArray>();
-                var first = showTemp.First; // here take the whole objet actually and then iterate - TODO
+                var showResponse = await response.Content.ReadAsAsync<JToken>();
+
                 TvShow show = new TvShow
                 {
-                    id = (int)first["show"]["id"],
-                    url = (string)first["show"]["url"],
-                    name = (string)first["show"]["name"],
-                    type = (string)first["show"]["type"],
-                    language = (string)first["show"]["language"],
-                    genres = first["show"]["genres"].Select(item => (string)item).ToList(),
-                    status = (string)first["show"]["status"],
-                    runtime = (int)first["show"]["runtime"],
-                    officialSite = (string)first["show"]["officialSite"],
-                    days = first["show"]["schedule"]["days"].Select(item => (string)item).ToList(),
-                    rating = (float)first["show"]["rating"]["average"],
-                    weight = (int)first["show"]["weight"],
-                    network = (string)first["show"]["network"],
-                    imageUrl = (string)first["show"]["image"]["medium"],
-                    summary = (string)first["show"]["summary"],
+                    id = (int)showResponse["id"],
+                    url = (string)showResponse["url"],
+                    name = (string)showResponse["name"],
+                    type = (string)showResponse["type"],
+                    language = (string)showResponse["language"],
+                    genres = showResponse["genres"].Select(item => (string)item).ToList(),
+                    status = (string)showResponse["status"],
+                    runtime = (int)showResponse["runtime"],
+                    officialSite = (string)showResponse["officialSite"],
+                    days = showResponse["schedule"]["days"].Select(item => (string)item).ToList(),
+                    rating = showResponse["rating"]["average"].Type == JTokenType.Null ? 0 : (float)showResponse["rating"]["average"],
+                    weight = (int)showResponse["weight"],
+                    network = showResponse["network"].Type == JTokenType.Null ? "" : (string)showResponse["network"]["name"],
+                    imageUrl = (string)showResponse["image"]["medium"],
+                    summary = (string)showResponse["summary"],
                 };
 
-                foreach(string item in show.genres){
-                    Console.WriteLine($"Genres: {item}\t");
-                }
+                show.Episodes = showResponse["_embedded"]["episodes"].Select(episode => new Episode
+                {
+                    id = (int)episode["id"],
+                    url = (string)episode["url"],
+                    name = (string)episode["name"],
+                    runtime = (int)episode["runtime"],
+                    imageUrl = episode["image"].Type == JTokenType.Null ? "" : (string)episode["image"]["medium"],
+                    summary = (string)episode["summary"],
+                }).ToList();
+
                 return show;
             }
             return null;
         }
-        public static void testApiCall()
+        public static void testApiCall(string[] items)
         {
-            RunAsync().GetAwaiter().GetResult();
+            RunAsync(items).GetAwaiter().GetResult();
         }
     }
 }

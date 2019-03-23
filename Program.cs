@@ -25,10 +25,13 @@ namespace backend
                 // foreach (var show in db.Shows)
                 // {
                 //     Console.WriteLine(" - {0}", show.title);
-                // }ole.WriteLine("{0} records saved to database, whoa!", count);
+                // }
+                // Console.WriteLine("{0} records saved to database, whoa!", count);
 
             }
-            TvShowApiCaller.testApiCall();
+            // TvShowApiCaller.testApiCall();
+            var results = ConfigFile.ReadFile();
+            TvShowApiCaller.testApiCall(results);
 
             // CreateWebHostBuilder(args).Build().Run();
         }

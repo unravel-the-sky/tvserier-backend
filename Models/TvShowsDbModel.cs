@@ -35,12 +35,8 @@ namespace backend.Models
         public float rating { get; set; }
         public int weight { get; set; }
         public string network { get; set; }
-        // public Object webChannel { get; set; }
-        // public Object externals { get; set; }
         public string imageUrl { get; set; }
         public string summary { get; set; }
-        // public Object updated { get; set; }
-        // public Object _links { get; set; }
         public ICollection<Episode> Episodes { get; set; }
     }
     public class Image
@@ -55,9 +51,13 @@ namespace backend.Models
     public class Episode
     {
         public int id { get; set; }
-        public int parentId { get; set; }
+        public string url { get; set; }
         public string name { get; set; }
+        public int season { get; set; }
+        public int number { get; set; }
+        public DateTime airtime { get; set; }
+        public int runtime { get; set; }
         public string imageUrl { get; set; }
-        public float rating { get; set; }
+        public string summary { get; set; }
     }
 }
