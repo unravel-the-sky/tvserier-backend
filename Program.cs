@@ -20,15 +20,17 @@ namespace backend
                 // db.Shows.Add(new TvShow { id = 14657, title = "Maniac" });
                 // db.Shows.Add(new TvShow { id = 123, title = "Wee" });
                 // var count = db.SaveChanges();
-                // Console.WriteLine("{0} records saved to database, whoa!", count);
-                Console.WriteLine();
-                Console.WriteLine("All shows in database: ");
-                foreach (var show in db.Shows)
-                {
-                    Console.WriteLine(" - {0}", show.title);
-                }
+                // Cons                // Console.WriteLine();
+                // Console.WriteLine("All shows in database: ");
+                // foreach (var show in db.Shows)
+                // {
+                //     Console.WriteLine(" - {0}", show.title);
+                // }ole.WriteLine("{0} records saved to database, whoa!", count);
+
             }
-            CreateWebHostBuilder(args).Build().Run();
+            TvShowApiCaller.testApiCall();
+
+            // CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
