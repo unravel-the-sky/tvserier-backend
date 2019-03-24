@@ -60,8 +60,8 @@ namespace backend.Models
     }
     public class Episode
     {
-        [BsonElement("episodeId")]
-        public string episodeId { get; set; }
+        [BsonId]
+        public string id { get; set; }
 
         [BsonElement("url")]
         public string url { get; set; }

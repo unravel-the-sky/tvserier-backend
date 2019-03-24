@@ -95,8 +95,10 @@ namespace backend.Services
 
                 show.Episodes = showResponse["_embedded"]["episodes"].Select(episode => new Episode
                 {
-                    episodeId = (string)episode["id"],
+                    id = (string)episode["id"],
                     url = (string)episode["url"],
+                    season = (int)episode["season"],
+                    number = (int)episode["number"],
                     name = (string)episode["name"],
                     runtime = (int)episode["runtime"],
                     imageUrl = episode["image"].Type == JTokenType.Null ? "" : (string)episode["image"]["medium"],
