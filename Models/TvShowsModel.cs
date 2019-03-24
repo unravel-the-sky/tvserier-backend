@@ -63,6 +63,9 @@ namespace backend.Models
         [BsonId]
         public string id { get; set; }
 
+        [BsonElement("showName")]
+        public string showName { get; set; }
+
         [BsonElement("url")]
         public string url { get; set; }
 
@@ -75,8 +78,8 @@ namespace backend.Models
         [BsonElement("number")]
         public int number { get; set; }
 
-        [BsonElement("airtime")]
-        public DateTime airtime { get; set; }
+        [BsonElement("airdate")]
+        public DateTime airdate { get; set; }
 
         [BsonElement("runtime")]
         public int runtime { get; set; }
@@ -86,5 +89,33 @@ namespace backend.Models
 
         [BsonElement("summary")]
         public string summary { get; set; }
+    }
+
+    // WebApi models
+    public class TvShowShort
+    {
+        public string showName { get; set; }
+        public string summary { get; set; }
+        public float rating { get; set; }
+        public string network { get; set; }
+        public string imageUrl { get; set; }
+        public ICollection<string> genres { get; set; }
+        public int numEpisodes { get; set; }
+        public int numReleasedEpisodes { get; set; }
+    }
+    public class TvShowNetwork
+    {
+        public float averageRating { get; set; }
+        public string network { get; set; }
+        public string showName { get; set; }
+        public int numShows { get; set; }
+    }
+    public class EpisodeShort
+    {
+        public string showName { get; set; }
+        public int season { get; set; }
+        public int number { get; set; }
+        public DateTime airdate { get; set; }
+        public string imageUrl { get; set; }
     }
 }

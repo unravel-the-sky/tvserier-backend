@@ -21,9 +21,16 @@ namespace backend.Controllers
 
         // GET api/shows
         [HttpGet]
-        public ActionResult<List<TvShow>> Get()
+        public ActionResult<List<TvShowShort>> Get()
         {
-            return _tvShowsService.Get();
+            return _tvShowsService.GetAllShows();
+        }
+
+        // GET api/shows/episodes
+        [HttpGet("episodes")]
+        public ActionResult<List<Episode>> GetEpisodes()
+        {
+            return _tvShowsService.GetEpisodes();
         }
 
         // GET api/shows/read
@@ -35,12 +42,29 @@ namespace backend.Controllers
         }
 
 
-        // // GET api/shows/topten
-        // [HttpGet]
-        // public ActionResult<IEnumerable<string>> GetTopTen()
-        // {
-        //     return new string[] { "value1", "value2" };
-        // }
+        // GET api/shows/topten
+        [HttpGet("topten")]
+        public ActionResult<ICollection<TvShowShort>> GetTopTen()
+        {
+            return _tvShowsService.GetTopTen();
+            // return StatusCode(200);
+        }
+
+        // GET api/shows/nextweek
+        [HttpGet("nextweek")]
+        public ActionResult<ICollection<EpisodeShort>> GetNextWeek()
+        {
+            return _tvShowsService.GetNextWeek();
+            // return StatusCode(200);
+        }
+
+        // GET api/shows/network
+        [HttpGet("network")]
+        public ActionResult<ICollection<TvShowNetwork>> GetByNetwork()
+        {
+            return _tvShowsService.GetByNetwork();
+            // return StatusCode(200);
+        }
 
         // GET api/shows/5
         [HttpGet("{id}")]
