@@ -35,7 +35,7 @@ namespace backend.Controllers
 
         // GET api/shows/read
         [HttpGet("read")]
-        public ActionResult<List<TvShow>> ReadConfigFile()
+        public ActionResult<Boolean> ReadConfigFile()
         {
             _tvShowsService.ReadConfigFile();
             return StatusCode(200);
@@ -50,12 +50,19 @@ namespace backend.Controllers
             // return StatusCode(200);
         }
 
+        // GET api/shows/genres
+        [HttpGet("genres")]
+        public ActionResult<ICollection<string>> GetUserGenres()
+        {
+            return _tvShowsService.GetUserGenres();
+            // return StatusCode(200);
+        }
+
         // GET api/shows/nextweek
         [HttpGet("nextweek")]
         public ActionResult<ICollection<EpisodeShort>> GetNextWeek()
         {
             return _tvShowsService.GetNextWeek();
-            // return StatusCode(200);
         }
 
         // GET api/shows/network

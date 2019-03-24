@@ -72,6 +72,23 @@ namespace backend.Services
             return _episodes.Find(show => true).ToList();
         }
 
+        public List<String> GetUserGenres()
+        {
+            var showsList = _tvshows
+                                .Find(e => e.genres.Count > 0)
+                                .ToList();
+            
+            List<String> genresList = new List<String>();
+            foreach(var item in showsList){
+                foreach (var genre in item.genres){
+                    if (!genresList.Contains(genre))
+                        genresList.Add(genre);
+                }
+            }
+            var uniqueGenres = genresList.Distinct().ToArray();
+            return genresList;
+        }
+
         public List<TvShowShort> GetTopTen()
         {
             var ratingList = _tvshows
@@ -203,10 +220,6 @@ namespace backend.Services
                     var show = await GetTvShowAsync(urlShows);
                     ShowProduct(show);
                     Thread.Sleep(500);
-
-                    // var urlEpisodes = ApiLinks.getEpisodesUrl + showName + ApiLinks.getEpisodesSuffix;
-                    // var episodes = await GetEpisodesAsync(urlEpisodes, showName);
-                    // AddEpisodesToDb(episodes);
                 }
             }
             catch (Exception err)
