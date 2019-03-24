@@ -1,90 +1,90 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace backend.Models
 {
-    public class TvShowResult
+    public class TvShow
     {
-        public TvShow show { get; set; }
-        public Episode episode { get; set; }
+        [BsonId]
+        public string id { get; set; }
+
+        [BsonElement("url")]
+        public string url { get; set; }
+
+        [BsonElement("name")]
+        public string name { get; set; }
+
+        [BsonElement("type")]
+        public string type { get; set; }
+
+        [BsonElement("language")]
+        public string language { get; set; }
+
+        [BsonElement("genres")]
+        public ICollection<string> genres { get; set; }
+
+        [BsonElement("status")]
+        public string status { get; set; }
+
+        [BsonElement("runtime")]
+        public int runtime { get; set; }
+
+        [BsonElement("premiered")]
+        public string premiered { get; set; }
+
+        [BsonElement("officialSite")]
+        public string officialSite { get; set; }
+
+        [BsonElement("days")]
+        public ICollection<string> days { get; set; }
+
+        [BsonElement("rating")]
+        public float rating { get; set; }
+
+        [BsonElement("weight")]
+        public int weight { get; set; }
+
+        [BsonElement("network")]
+        public string network { get; set; }
+
+        [BsonElement("imageUrl")]
+        public string imageUrl { get; set; }
+
+        [BsonElement("summary")]
+        public string summary { get; set; }
+
+        [BsonElement("Episodes")]
+        public ICollection<Episode> Episodes { get; set; }
     }
-
-    class TvShowApiCaller
+    public class Episode
     {
-        static HttpClient client = new HttpClient();
-        static void ShowProduct(TvShow show)
-        {
-            Console.WriteLine($"Name: {show.name}\t");
-        }
-        static async Task RunAsync(string[] showNames)
-        {
-            client.BaseAddress = new Uri("http://localhost:5000/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        [BsonElement("episodeId")]
+        public string episodeId { get; set; }
 
-            try
-            {
-                foreach (string showName in showNames)
-                {
-                    var url = ApiLinks.getTvShowUrlQueryUrl + showName + ApiLinks.embedEpisodes;
-                    var show = await GetTvShowAsync(url);
-                    ShowProduct(show);
-                }
-            }
-            catch (Exception err)
-            {
-                Console.WriteLine("error!" + err);
-            }
-        }
-        static async Task<TvShow> GetTvShowAsync(string url)
-        {
-            // TvShow show = null;
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                var showResponse = await response.Content.ReadAsAsync<JToken>();
+        [BsonElement("url")]
+        public string url { get; set; }
 
-                TvShow show = new TvShow
-                {
-                    id = (int)showResponse["id"],
-                    url = (string)showResponse["url"],
-                    name = (string)showResponse["name"],
-                    type = (string)showResponse["type"],
-                    language = (string)showResponse["language"],
-                    genres = showResponse["genres"].Select(item => (string)item).ToList(),
-                    status = (string)showResponse["status"],
-                    runtime = (int)showResponse["runtime"],
-                    officialSite = (string)showResponse["officialSite"],
-                    days = showResponse["schedule"]["days"].Select(item => (string)item).ToList(),
-                    rating = showResponse["rating"]["average"].Type == JTokenType.Null ? 0 : (float)showResponse["rating"]["average"],
-                    weight = (int)showResponse["weight"],
-                    network = showResponse["network"].Type == JTokenType.Null ? "" : (string)showResponse["network"]["name"],
-                    imageUrl = (string)showResponse["image"]["medium"],
-                    summary = (string)showResponse["summary"],
-                };
+        [BsonElement("name")]
+        public string name { get; set; }
 
-                show.Episodes = showResponse["_embedded"]["episodes"].Select(episode => new Episode
-                {
-                    id = (int)episode["id"],
-                    url = (string)episode["url"],
-                    name = (string)episode["name"],
-                    runtime = (int)episode["runtime"],
-                    imageUrl = episode["image"].Type == JTokenType.Null ? "" : (string)episode["image"]["medium"],
-                    summary = (string)episode["summary"],
-                }).ToList();
+        [BsonElement("season")]
+        public int season { get; set; }
 
-                return show;
-            }
-            return null;
-        }
-        public static void testApiCall(string[] items)
-        {
-            RunAsync(items).GetAwaiter().GetResult();
-        }
+        [BsonElement("number")]
+        public int number { get; set; }
+
+        [BsonElement("airtime")]
+        public DateTime airtime { get; set; }
+
+        [BsonElement("runtime")]
+        public int runtime { get; set; }
+
+        [BsonElement("imageUrl")]
+        public string imageUrl { get; set; }
+
+        [BsonElement("summary")]
+        public string summary { get; set; }
     }
 }

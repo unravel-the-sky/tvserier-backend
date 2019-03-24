@@ -15,25 +15,7 @@ namespace backend
     {
         public static void Main(string[] args)
         {
-            using (var db = new TvShowsContext())
-            {
-                // db.Shows.Add(new TvShow { id = 14657, title = "Maniac" });
-                // db.Shows.Add(new TvShow { id = 123, title = "Wee" });
-                // var count = db.SaveChanges();
-                // Cons                // Console.WriteLine();
-                // Console.WriteLine("All shows in database: ");
-                // foreach (var show in db.Shows)
-                // {
-                //     Console.WriteLine(" - {0}", show.title);
-                // }
-                // Console.WriteLine("{0} records saved to database, whoa!", count);
-
-            }
-            // TvShowApiCaller.testApiCall();
-            var results = ConfigFile.ReadFile();
-            TvShowApiCaller.testApiCall(results);
-
-            // CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
