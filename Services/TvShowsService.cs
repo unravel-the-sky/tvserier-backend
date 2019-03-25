@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace backend.Services
 {
@@ -77,10 +79,12 @@ namespace backend.Services
             var showsList = _tvshows
                                 .Find(e => e.genres.Count > 0)
                                 .ToList();
-            
+
             List<String> genresList = new List<String>();
-            foreach(var item in showsList){
-                foreach (var genre in item.genres){
+            foreach (var item in showsList)
+            {
+                foreach (var genre in item.genres)
+                {
                     if (!genresList.Contains(genre))
                         genresList.Add(genre);
                 }
@@ -189,15 +193,34 @@ namespace backend.Services
         public bool ReadConfigFile()
         {
             var results = ConfigFile.ReadFile();
-            testApiCall(results);
+            // callMazeApi(results);
             return true;
+        }
+
+        public bool ReadFromConfigFile(List<string> lines)
+        {
+            var results = lines;
+            callMazeApi(results);
+            return true;
+        }
+
+        public List<string> ReadFileNew(IFormFile file)
+        {
+            var result = string.Empty;
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                result = reader.ReadToEnd();
+            }
+
+            return string.IsNullOrEmpty(result)
+                ? null
+                : result.Split('\n').ToList();
         }
 
         void ShowProduct(TvShow show)
         {
             Console.WriteLine($"Name: {show.name}\t");
             Create(show);
-            // AddProductToDatabase(show);
         }
         void AddEpisodesToDb(ICollection<Episode> episodes)
         {
@@ -206,7 +229,7 @@ namespace backend.Services
                 _episodes.InsertOne(episode);
             }
         }
-        async Task RunAsync(string[] showNames)
+        async Task RunAsync(List<string> showNames)
         {
             client.BaseAddress = new Uri("http://localhost:5000/");
             client.DefaultRequestHeaders.Accept.Clear();
@@ -301,7 +324,6 @@ namespace backend.Services
                 };
 
                 show.Episodes = showResponse["_embedded"]["episodes"].Select(episode => new Episode
-                // ICollection<Episode> episodes = showResponse["_embedded"]["episodes"].Select(episode => new Episode
                 {
                     showName = showName,
                     id = (string)episode["id"],
@@ -319,17 +341,10 @@ namespace backend.Services
             }
             return null;
         }
-        public void testApiCall(string[] items)
+        public bool callMazeApi(List<string> items)
         {
-            // List<Task> TaskList = new List<Task>();
-            // foreach (var item in items)
-            // {
-            //     var task = FetchDataFromApi(item);
-            //     task.Start();
-            //     TaskList.Add(task);
-            // }
-            // Task.WaitAll(TaskList.ToArray());
             RunAsync(items).GetAwaiter().GetResult();
+            return true;
         }
 
         public TvShow Get(string id)

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -34,11 +37,33 @@ namespace backend.Controllers
         }
 
         // GET api/shows/read
-        [HttpGet("read")]
-        public ActionResult<Boolean> ReadConfigFile()
+        // [HttpGet("read")]
+        // public ActionResult<Boolean> ReadConfigFile()
+        // {
+        //     _tvShowsService.ReadConfigFile();
+        //     return StatusCode(200);
+        // }
+
+        // GET api/shows/upload
+        [HttpPost("upload")]
+        public ActionResult<Boolean> UploadConfigFile(IFormFile file)
         {
-            _tvShowsService.ReadConfigFile();
-            return StatusCode(200);
+            // _tvShowsService.ReadFileNew(file)
+            var result = string.Empty;
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                result = reader.ReadToEnd();
+            }
+
+            var temp = string.IsNullOrEmpty(result) ? null : result.Split('\n').ToList();
+
+            var finalResult = _tvShowsService.ReadFromConfigFile(temp);
+            if (finalResult)
+            {
+                return StatusCode(200);
+            } else {
+                return StatusCode(500);
+            }
         }
 
 
