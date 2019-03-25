@@ -20,5 +20,11 @@ HOW TO RUN THE PROJECT:
   mongod --dbpath <data_directory_path>
 - then: open another terminal and type mongo
 - then: start the tvserier-backend project (it will use the mongodb database)
+- IMPORTANT: because CORS requirements, when running the frontend part, please go and modify the Startup.cs file:
+            app.UseCors(
+                    options => options.WithOrigins("http://192.168.1.121:8080").AllowAnyMethod()
+                );
+        
+        the 'http://192.168.1.121:8080' shall be cha
 
 Sadan
