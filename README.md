@@ -14,4 +14,11 @@ Backend decisions:
 - i can describe the code more if you'd like to proceed later on :) 
 - PS: i didn't find a way to NOT upload the pdp and dll files, although i have set up the .gitignore file correctly. at least it seems.. so it looks a bit rookie but oh well..
 
+HOW TO RUN THE PROJECT:
+- first install mongodb on your machine: https://docs.mongodb.com/v3.2/administration/install-community/
+- then: Open a command shell. Run the following command to connect to MongoDB on default port 27017. Remember to replace <data_directory_path> with the directory you chose in the previous step. 
+  mongod --dbpath <data_directory_path>
+- then: open another terminal and type mongo
+- then: start the tvserier-backend project (it will use the mongodb database)
+
 Sadan
