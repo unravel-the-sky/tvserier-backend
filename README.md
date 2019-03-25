@@ -25,6 +25,6 @@ HOW TO RUN THE PROJECT:
                     options => options.WithOrigins("http://192.168.1.121:8080").AllowAnyMethod()
                 );
         
-        the 'http://192.168.1.121:8080' shall be cha
+        the 'http://192.168.1.121:8080' shall be changed into where the vue app is running on
 
 Sadan
