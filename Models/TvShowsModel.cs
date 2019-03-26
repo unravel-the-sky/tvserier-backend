@@ -41,7 +41,7 @@ namespace backend.Models
         public ICollection<string> days { get; set; }
 
         [BsonElement("rating")]
-        public float rating { get; set; }
+        public double rating { get; set; }
 
         [BsonElement("weight")]
         public int weight { get; set; }
@@ -96,7 +96,7 @@ namespace backend.Models
     {
         public string showName { get; set; }
         public string summary { get; set; }
-        public float rating { get; set; }
+        public double rating { get; set; }
         public string network { get; set; }
         public string imageUrl { get; set; }
         public ICollection<string> genres { get; set; }
@@ -105,7 +105,7 @@ namespace backend.Models
     }
     public class TvShowNetwork
     {
-        public float averageRating { get; set; }
+        public double averageRating { get; set; }
         public string network { get; set; }
         public string showName { get; set; }
         public int numShows { get; set; }

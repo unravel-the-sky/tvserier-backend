@@ -75,6 +75,14 @@ namespace backend.Controllers
             // return StatusCode(200);
         }
 
+        // GET api/shows/toptensave
+        [HttpGet("toptensave")]
+        public ActionResult<ICollection<TvShowShort>> GetTopTenAndSave()
+        {
+            return _tvShowsService.GetTopTenAndSave();
+            // return StatusCode(200);
+        }
+
         // GET api/shows/genres
         [HttpGet("genres")]
         public ActionResult<ICollection<string>> GetUserGenres()

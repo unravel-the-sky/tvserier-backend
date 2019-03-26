@@ -45,7 +45,7 @@ namespace backend
             }
 
             app.UseCors(
-                    options => options.WithOrigins("http://192.168.1.143:8080").AllowAnyMethod()
+                    options => options.WithOrigins("http://192.168.1.121:8080").AllowAnyMethod()
                 );
             // app.UseHttpsRedirection();
             app.UseMvc();

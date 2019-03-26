@@ -118,6 +118,39 @@ namespace backend.Services
             }
             return rankedTvShowsList;
         }
+        public List<TvShowShort> GetTopTenAndSave()
+        {
+            var ratingList = _tvshows
+                                .Find(e => e.rating > 0)
+                                .SortByDescending(e => e.rating)
+                                .Limit(10)
+                                .ToList();
+
+            var logPath = System.IO.Path.GetTempFileName();
+
+
+            using (var writer = File.CreateText(logPath))
+            {
+                List<TvShowShort> rankedTvShowsList = new List<TvShowShort>();
+                foreach (var item in ratingList)
+                {
+                    TvShowShort tvshow = new TvShowShort
+                    {
+                        showName = item.name,
+                        imageUrl = item.imageUrl,
+                        rating = item.rating,
+                        network = item.network,
+                        summary = item.summary,
+                        genres = item.genres,
+                        numEpisodes = item.Episodes.Count,
+                    };
+
+                    writer.WriteLine(item.name + ";" + item.network + ";" + item.Episodes.Count + "\n"); //or .Write(), if you wish
+                }
+                // rankedTvShowsList.Add(tvshow);
+            }
+            return null;
+        }
         public List<EpisodeShort> GetNextWeek()
         {
             var filterBuilder = Builders<Episode>.Filter;
@@ -147,40 +180,26 @@ namespace backend.Services
             var aggreate = _tvshows.Aggregate()
                                     .Match(x => x.network != "")
                                     .Group(
-                                        x => new
+                                        key => key.network,
+                                        value => new
                                         {
-                                            network = x.network,
-                                            showName = x.name,
-                                            numShows = x.Episodes.Count,
-                                        },
-                                        g => new
-                                        {
-                                            Key = g.Key,
-                                            avgRating = g.Average(x => x.rating)
-                                        }
-                                    )
+                                            Key = value.Key,
+                                            avgRating = value.Average(x => x.rating),
+                                            topShow = value.Max(x => x.name),
+                                            numShows = value.Count(x => x.name != "")
+                                        })
                                     .SortByDescending(x => x.avgRating)
                                     .Project(p => new TvShowNetwork
                                     {
                                         averageRating = p.avgRating,
-                                        network = p.Key.network,
-                                        showName = p.Key.showName,
-                                        numShows = p.Key.numShows
+                                        network = p.Key,
+                                        showName = p.topShow,
+                                        numShows = p.numShows
                                     })
                                     .ToList();
 
-            // return aggreate;
-            var result = _tvshows.AsQueryable()
-                                .Where(s => s.network != "")
-                                .GroupBy(s => new { s.network })
-                                .Select(n => new
-                                {
-                                    Key = n.Key,
-                                    AverageRating = n.Average(p => p.rating)
-                                });
-
-            // var filterResult = _episodes.Find(filter).ToList();
             List<TvShowNetwork> filteredShowsList = aggreate;
+
             return filteredShowsList;
         }
         public TvShow Create(TvShow show)
